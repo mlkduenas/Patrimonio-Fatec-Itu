@@ -41,7 +41,7 @@ export default function Scanner({navigation}) {
 					style={({pressed}) => [
 						{backgroundColor: pressed ? themes.colors.brand.vermelhoClaro : themes.colors.brand.vermelhoEscuro},
 						styles.botao]}>
-					<Text style={styles.btnTexto}>ESCANEAR NOVAMENTE</Text>
+					<Text style={styles.btnTexto}>Editar/Cadastrar Patrimônio</Text>
 				</Pressable>
 			</View>
 		) : ( 

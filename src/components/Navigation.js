@@ -5,6 +5,7 @@ import { NavigationContainer }
 import Home from '../screens/Home'
 import Scanner from '../screens/Scanner'
 import Cadastro from '../screens/Cadastro'
+import Login from '../screens/Login'
 import themes from '../themes'
 
 const Stack = createNativeStackNavigator()
@@ -14,8 +15,7 @@ function AppStack() {
             <Stack.Screen 
                 name="Home" 
                 component={Home} 
-                options={{title: 'SCANdinavia - QR Code Scanner', headerStyle:{backgroundColor: themes.colors.brand.roxoEscuro}}}    
-            />
+                options={{title: 'SCANdinavia - QR Code Scanner', headerStyle:{backgroundColor: themes.colors.brand.roxoEscuro}}} />
             <Stack.Screen 
                 name="Scanner" 
                 component={Scanner} 
@@ -25,6 +25,10 @@ function AppStack() {
                 component={Cadastro} 
                 options ={{ presentation: 'modal', headerStyle:{backgroundColor: themes.colors.brand.roxoEscuro} }}
                 initialParams={{ data: "" }} />
+            <Stack.Screen 
+                name="Login" 
+                component={Login} 
+                options ={{ presentation: 'modal', headerStyle:{backgroundColor: themes.colors.brand.roxoEscuro} }} />
         </Stack.Navigator>
     )
 }
