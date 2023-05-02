@@ -13,8 +13,8 @@ import { signInWithEmailAndPassword } from 'firebase/auth'
 export default function Login({navigation}) {
     const insets = useSafeAreaInsets()
 
-    const [email, setEmail] = useState('')
-    const [senha, setSenha] = useState('')
+    const [email, setEmail] = useState('teste@teste.com')
+    const [senha, setSenha] = useState('123456')
     
     const handleLogin = async() => {
         //Efetuando as validações básicas do form
@@ -42,7 +42,7 @@ export default function Login({navigation}) {
     return (
         <View style={{
             paddingTop: insets.top,
-            backgroundColor: themes.colors.brand.RoxoEscuro,
+            // backgroundColor: themes.colors.brand.roxoEscuro,
             flex: 1
         }}>
             <View style={styles.container}>
@@ -82,7 +82,7 @@ export default function Login({navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: themes.colors.brand.RoxoClaro,
+        // backgroundColor: themes.colors.brand.roxoClaro,
         alignItems: 'center',
         justifyContent: 'center',
         margin: 16,
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     },
     titulo: {
         fontSize: 24,
-        color: themes.colors.brand.RoxoEscuro,
+        color: themes.colors.brand.roxoEscuro,
         marginVertical: 8
     },
     logo: {
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     },
     input: {
         borderWidth: 1,
-        borderColor: themes.colors.brand.RoxoEscuro,
+        borderColor: themes.colors.brand.roxoEscuro,
         backgroundColor: themes.colors.neutral.foreground,
         borderRadius: 8,
         padding: 8,
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 16,
         marginBottom: 8,
-        color: themes.colors.brand.RoxoEscuro
+        color: themes.colors.brand.roxoEscuro
     },
     loginButton: {
         backgroundColor: themes.colors.utility.info,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, Text, TextInput, Button, Alert } from 'react-native'
+import { StyleSheet, View, Text, TextInput, Alert, Pressable, TouchableOpacity } from 'react-native'
 import themes from '../themes'
 
 import { database, auth } from '../../config/firebase'
@@ -21,6 +21,7 @@ export default function Cadastro({navigation, route}){
         usuarioInclusao: auth.currentUser.uid
 	})
 
+	// codigo pra consultar a database e verificar o cadastro do patrimonio
 	useEffect(() => {
 		const patrimonioRef = collection(database, "patrimonio");
 		const q = query(patrimonioRef, where("codigo", "==", data));
@@ -36,9 +37,6 @@ export default function Cadastro({navigation, route}){
 		})
 	   }, [])
 
-	// codigo pra consultar a database e verificar o cadastro do patrimonio
-	
-
 	const handleCadastro = async() => {
 		await addDoc(collection(database, 'patrimonio'), patrimonio)
 		.then(() => {
@@ -49,7 +47,6 @@ export default function Cadastro({navigation, route}){
             Alert.alert('Erro',
             `Erro ao adicionar o doc: ${error.message}`)
         })
-        navigation.goBack()
 		return;
 	}
 
@@ -67,7 +64,7 @@ export default function Cadastro({navigation, route}){
 	}
 
 	return (
-		<View>
+		<View style={styles.container}>
 			<Text style={styles.titulo}>{(editar ? "Editar" : "Cadastrar")} Patrimônio</Text>
 			<TextInput
 				style = {styles.input}
@@ -92,19 +89,24 @@ export default function Cadastro({navigation, route}){
 				value = {patrimonio.local}
 				placeholder = "Local"
 			/>
-			<Button
+			<TouchableOpacity
 				onPress={(editar ? handleEditar : handleCadastro)}
-				title={(editar ? "Editar" : "Cadastrar")}
-			/>
-			<Button
+				style={styles.button}
+			><Text style={styles.buttonText}>{(editar ? "Editar" : "Cadastrar")}</Text></TouchableOpacity>
+			<TouchableOpacity
 				onPress={() => setEditar(!editar)}
-				title="Switch Cadastro/Edição"
-			/>
+				style={styles.button}
+			><Text style={styles.buttonText}>Switch Cadastro/Edição</Text></TouchableOpacity>
 		</View>
 	)
 }
 
 const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+		margin: 20,
+	},
 	titulo: {
 		margin: 20,
 		fontSize: 30,
@@ -112,9 +114,22 @@ const styles = StyleSheet.create({
 	},
 	input: {
 		fontSize: 20,
-		margin: 10,
+		marginVertical: 10,
+		borderRadius: 10,
 		borderWidth: 1,
 		padding: 10,
-		paddingLeft: 10,
 	},
+	button: {
+		backgroundColor: themes.colors.utility.info,
+		marginVertical: 10,
+		borderRadius: 10,
+		borderWidth: 2,
+		padding: 10,
+		alignSelf: "center",
+	},
+	buttonText: {
+        color: themes.colors.neutral.foreground,
+        fontWeight: 'bold',
+        textAlign: 'center'
+    },
 });
