@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Linking, Alert, Pressable, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Linking, Alert, Pressable, Dimensions, Button } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import BotaoFlutuante from '../components/BotaoFlutuante';
 import themes from '../themes'
 
+import { database, auth } from '../../config/firebase'
+import { collection, query, where, onSnapshot, doc } from 'firebase/firestore'
 
 export default function Scanner({navigation}) {
 	const [hasPermission, setHasPermission] = useState(false);
@@ -22,6 +24,28 @@ export default function Scanner({navigation}) {
 		setData(data);
 	};
 
+	const addPatrimonio = () => {
+		const patrimonioRef = collection(database, "patrimonio");
+		const q = query(patrimonioRef, where("codigo", "==", data));
+		// setScanned(false);
+		onSnapshot(q, querySnapshot => {
+			if (!querySnapshot.empty) {
+				const doc = querySnapshot.docs[0];
+				const patrimonio = {
+					id: doc.id, 
+					codigo: doc.data().codigo,
+					nome: doc.data().nome,
+					local: doc.data().local,
+					createdAt: doc.data().createdAt
+				}
+				// navigation.navigate("editPatrimonio", patrimonio);
+			}
+			else {
+				navigation.navigate("addPatrimonio", { data });
+			}
+		})
+	}
+
 	if (hasPermission === null) {
 		return <Text style={styles.texto}>Solicitando permissão para usar a câmera</Text>;
 	}
@@ -37,7 +61,7 @@ export default function Scanner({navigation}) {
 					<Text style={styles.data}>{data}</Text>
 				</View>
 
-				<Pressable onPress={() => {setScanned(false); navigation.navigate("Cadastro", { data })}}
+				<Pressable onPress={addPatrimonio}
 					style={({pressed}) => [
 						{backgroundColor: pressed ? themes.colors.brand.vermelhoClaro : themes.colors.brand.vermelhoEscuro},
 						styles.botao]}>
@@ -48,7 +72,9 @@ export default function Scanner({navigation}) {
 			<BarCodeScanner onBarCodeScanned={scanned ? undefined : handleBarCodeScanned} style={{
 				width: Dimensions.get('screen').width * 1.5,
 				height: Dimensions.get('screen').height * 1.5,
-			}} />
+			}}>
+				<Button title='vsd porra' onPress={() => {setScanned(true); setData(123456)}}></Button>
+			</BarCodeScanner>
 		)}
 		</View>
 	);

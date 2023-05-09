@@ -10,8 +10,11 @@ const hoje = moment()
 
 export default function Cadastro({navigation, route}){
 	const { data } = route.params;
-	const [editar, setEditar] = useState(false); // true se ja existe, false se não
-	const [docId, setDocId] = useState('');
+	const [vsf, setVsf] = useState(false)
+
+	useEffect(() => {
+		setVsf(data == "");
+	}, []);
 
 	const [patrimonio, setPatrimonio] = useState({
 		codigo: data,
@@ -20,22 +23,6 @@ export default function Cadastro({navigation, route}){
         createdAt: hoje.format(),
         usuarioInclusao: auth.currentUser.uid
 	})
-
-	// codigo pra consultar a database e verificar o cadastro do patrimonio
-	useEffect(() => {
-		const patrimonioRef = collection(database, "patrimonio");
-		const q = query(patrimonioRef, where("codigo", "==", data));
-		onSnapshot(q, querySnapshot => {
-			if (!querySnapshot.empty) {
-				setEditar(true);
-				setPatrimonio({ ...patrimonio,
-					nome: querySnapshot.docs[0].data().nome,
-					local: querySnapshot.docs[0].data().local,
-				});
-				setDocId(querySnapshot.docs[0].id)
-			}
-		})
-	   }, [])
 
 	const handleCadastro = async() => {
 		await addDoc(collection(database, 'patrimonio'), patrimonio)
@@ -50,22 +37,22 @@ export default function Cadastro({navigation, route}){
 		return;
 	}
 
-	const handleEditar = async() => {
-		await updateDoc(doc(database, 'patrimonio', docId), patrimonio)
-		.then(() => {
-			Alert.alert("Sucesso", "Patrimônio editado com sucesso");
-			navigation.goBack();
-		})
-		.catch((error) => {
-            Alert.alert('Erro',
-            `Erro ao atualizar o doc: ${error.message}`);
-        })
-		return;
-	}
+	// const handleEditar = async() => {
+	// 	await updateDoc(doc(database, 'patrimonio', patrimonio.id), patrimonio)
+	// 	.then(() => {
+	// 		Alert.alert("Sucesso", "Patrimônio editado com sucesso");
+	// 		navigation.goBack();
+	// 	})
+	// 	.catch((error) => {
+    //         Alert.alert('Erro',
+    //         `Erro ao atualizar o doc: ${error.message}`);
+    //     })
+	// 	return;
+	// }
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.titulo}>{(editar ? "Editar" : "Cadastrar")} Patrimônio</Text>
+			<Text style={styles.titulo}>Cadastrar Patrimônio</Text>
 			<TextInput
 				style = {styles.input}
 				onChangeText = {(text) => setPatrimonio(
@@ -73,7 +60,7 @@ export default function Cadastro({navigation, route}){
 				value = {patrimonio.codigo}
 				placeholder = "Código"
 				keyboardType = "numeric"
-				readOnly = {editar}
+				readOnly = {vsf}
 			/>
 			<TextInput
 				style = {styles.input}
@@ -90,13 +77,9 @@ export default function Cadastro({navigation, route}){
 				placeholder = "Local"
 			/>
 			<TouchableOpacity
-				onPress={(editar ? handleEditar : handleCadastro)}
+				onPress={handleCadastro}
 				style={styles.button}
-			><Text style={styles.buttonText}>{(editar ? "Editar" : "Cadastrar")}</Text></TouchableOpacity>
-			<TouchableOpacity
-				onPress={() => setEditar(!editar)}
-				style={styles.button}
-			><Text style={styles.buttonText}>Switch Cadastro/Edição</Text></TouchableOpacity>
+			><Text style={styles.buttonText}>Cadastrar</Text></TouchableOpacity>
 		</View>
 	)
 }

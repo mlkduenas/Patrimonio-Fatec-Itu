@@ -4,8 +4,9 @@ import { NavigationContainer }
     from '@react-navigation/native'
 import Home from '../screens/Home'
 import Scanner from '../screens/Scanner'
-import Cadastro from '../screens/Cadastro'
+import addPatrimonio from '../screens/addPatrimonio'
 import Login from '../screens/Login'
+import Lista from '../screens/Lista'
 import themes from '../themes'
 
 const Stack = createNativeStackNavigator()
@@ -21,13 +22,17 @@ function AppStack() {
                 component={Scanner} 
                 options ={{ presentation: 'modal', headerStyle:{backgroundColor: themes.colors.brand.roxoEscuro} }} />
             <Stack.Screen 
-                name="Cadastro" 
-                component={Cadastro} 
+                name="addPatrimonio" 
+                component={addPatrimonio} 
                 options ={{ presentation: 'modal', headerStyle:{backgroundColor: themes.colors.brand.roxoEscuro} }}
                 initialParams={{ data: "" }} />
             <Stack.Screen 
                 name="Login" 
                 component={Login} 
+                options ={{ presentation: 'modal', headerStyle:{backgroundColor: themes.colors.brand.roxoEscuro} }} />
+            <Stack.Screen 
+                name="Lista" 
+                component={Lista} 
                 options ={{ presentation: 'modal', headerStyle:{backgroundColor: themes.colors.brand.roxoEscuro} }} />
         </Stack.Navigator>
     )

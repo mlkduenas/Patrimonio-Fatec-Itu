@@ -42,13 +42,16 @@ export default function Home({navigation}){
 			</View>
 				<Image source={require('../../assets/viking128px.png')}
 					style={styles.button}/>
-			<MotiView style={styles.container}>
+			<MotiView>
 				<Animate>
 					<BotaoFlutuante onPress={checkLogin}
 						icon="qrcode-scan" size={150} style={styles.button}/> 
-				</Animate>
-			</MotiView>
+						</Animate>
+					</MotiView>
+			{/* <BotaoFlutuante onPress={checkLogin}
+				icon="qrcode-scan" size={150} style={styles.button}/>  */}
 			<Button title='Login' onPress={() => navigation.navigate('Login')}></Button>
+			<Button title='Lista de Patrimonios' onPress={() => navigation.navigate('Lista')}></Button>
 		</View>
 	)
 }
