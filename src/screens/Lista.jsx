@@ -1,12 +1,12 @@
 import React, {useState, useEffect, useLayoutEffect} 
        from 'react'
-import {View, Text, Alert, ActivityIndicator, ScrollView, StyleSheet} from 'react-native'
+import {View, Text, Alert, ActivityIndicator, ScrollView, StyleSheet, TextInput} from 'react-native'
 import BotaoFlutuante from '../components/BotaoFlutuante'
 import themes from '../themes'
 import {MaterialCommunityIcons} from '@expo/vector-icons'
 import {auth, database} from '../../config/firebase'
 import {signOut} from 'firebase/auth'
-import {collection, onSnapshot, orderBy, query, where, addDoc} 
+import {collection, onSnapshot, orderBy, query, where} 
        from 'firebase/firestore'
 import Patrimonio from '../components/Patrimonio'       
 
@@ -17,8 +17,8 @@ export default function Home({navigation}){
 
     useEffect(() => {
         setCarregaPatrimonios(true)
-        const collectionRef = collection(database, 'patrimonio')
-        const q = query(collectionRef, where("usuarioInclusao", "==", auth.currentUser.uid))
+        const collectionRef = collection(database, 'patrimonio');
+        const q = query(collectionRef, where("usuarioInclusao", "==", auth.currentUser.uid));
         const getPatrimonios = onSnapshot(q, querySnapshot => {
             setPatrimonios(
                 querySnapshot.docs.map(doc => ({
@@ -39,16 +39,37 @@ export default function Home({navigation}){
         <View style={styles.container}>
             <ScrollView contentContainerStyle={{paddingBottom: 64}}>
 
-                <Text style={styles.tituloApp}>Controle de Patrimonios</Text>    
+                <Text style={styles.tituloApp}>Controle de Patrimonios</Text>   
+
+                <TextInput
+                    placeholder = '🔎Filtrar...'
+                    autoFocus
+                    placeholderTextColor = {themes.colors.neutral.foreground}
+                    style = {styles.buscaInput}
+                    onChangeText={(text) => setBusca(text)} /> 
 
                 {carregaPatrimonios && 
                     <ActivityIndicator size="large"
-                    color={themes.colors.brand.roxoEscuro}/>}
+                    color={themes.colors.utility.warning}/>}
                 
                 {
+                    patrimonios
+                    .filter((patrimonio) =>
+                        patrimonio.nome.toLocaleLowerCase()
+                        .includes(busca.toLocaleLowerCase()) ||
+                        patrimonio.local.toLocaleLowerCase()
+                        .includes(busca.toLocaleLowerCase()) ||
+                        patrimonio.codigo.toLocaleLowerCase()
+                        .includes(busca.toLocaleLowerCase())
+                    )
+                    .map(dadoPatrimonio => 
+                        <Patrimonio key={dadoPatrimonio.id} {...dadoPatrimonio} />
+                    )           
+                }
+                {/* {   
                     patrimonios.map(dadoPatrimonio => 
                     <Patrimonio key={dadoPatrimonio.id} {...dadoPatrimonio} />)
-                }
+                } */}
             </ScrollView>
         </View>
     )
@@ -57,7 +78,7 @@ export default function Home({navigation}){
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: themes.colors.brand.roxoEscuro,
+        backgroundColor: themes.colors.brand.roxoClaro,
         margin: 0
     },
     tituloApp: {
