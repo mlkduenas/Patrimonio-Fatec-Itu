@@ -6,7 +6,7 @@ import themes from '../themes'
 import {MaterialCommunityIcons} from '@expo/vector-icons'
 import {auth, database} from '../../config/firebase'
 import {signOut} from 'firebase/auth'
-import {collection, onSnapshot, orderBy, query, where} 
+import {collection, onSnapshot, orderBy, query, where, addDoc} 
        from 'firebase/firestore'
 import Patrimonio from '../components/Patrimonio'       
 
@@ -14,42 +14,26 @@ export default function Home({navigation}){
     const [busca, setBusca] = useState('')
     const [patrimonios, setPatrimonios] = useState([])
     const [carregaPatrimonios, setCarregaPatrimonios] = useState(false)
-   
-   useLayoutEffect(()=> {
-    navigation.setOptions({
-        // headerLeft: () => <></>, //remove o voltar
-        headerRight: () => <MaterialCommunityIcons.Button
-        name="logout"
-        backgroundColor={themes.colors.brand.roxoEscuro}
-        onPress={handleLogout}>
-            Logout
-        </MaterialCommunityIcons.Button>
-    })
-   },[navigation])
 
-   function handleLogout(){
-    signOut(auth)
-    .then(() => {navigation.navigate('Home')})
-   }
+    useEffect(() => {
+        setCarregaPatrimonios(true)
+        const collectionRef = collection(database, 'patrimonio')
+        const q = query(collectionRef, where("usuarioInclusao", "==", auth.currentUser.uid))
+        const getPatrimonios = onSnapshot(q, querySnapshot => {
+            setPatrimonios(
+                querySnapshot.docs.map(doc => ({
+                    id: doc.id, 
+                    codigo: doc.data().codigo,
+                    nome: doc.data().nome,
+                    local: doc.data().local,
+                    createdAt: doc.data().createdAt
+                }))
+            )
+        })
 
-   useEffect(() => {
-    setCarregaPatrimonios(true)
-    const collectionRef = collection(database, 'patrimonio')
-    const q = query(collectionRef)
-    const getPatrimonios = onSnapshot(q, querySnapshot => {
-        setPatrimonios(
-            querySnapshot.docs.map(doc => ({
-                id: doc.id, 
-                codigo: doc.data().codigo,
-                nome: doc.data().nome,
-                local: doc.data().local,
-                createdAt: doc.data().createdAt
-            }))
-        )
-    })
-    setCarregaPatrimonios(false)
-    return getPatrimonios
-   }, [])
+        setCarregaPatrimonios(false)
+        return getPatrimonios
+    }, [])
 
     return (
         <View style={styles.container}>

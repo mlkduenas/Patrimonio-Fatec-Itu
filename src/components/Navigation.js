@@ -1,12 +1,13 @@
-import { createNativeStackNavigator }
-    from '@react-navigation/native-stack'
-import { NavigationContainer }
-    from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { NavigationContainer } from '@react-navigation/native'
+
+import Login from '../screens/Login'
+import Signup from '../screens/Signup'
 import Home from '../screens/Home'
+import Lista from '../screens/Lista'
 import Scanner from '../screens/Scanner'
 import addPatrimonio from '../screens/addPatrimonio'
-import Login from '../screens/Login'
-import Lista from '../screens/Lista'
+import editPatrimonio from '../screens/editPatrimonio'
 import themes from '../themes'
 
 const Stack = createNativeStackNavigator()
@@ -14,9 +15,18 @@ function AppStack() {
     return (
         <Stack.Navigator>
             <Stack.Screen 
+                name="Login" 
+                component={Login} 
+                options ={{ presentation: 'modal', headerStyle:{backgroundColor: themes.colors.brand.roxoEscuro} }}
+                initialParams={{ email: "teste@teste.com" }} />
+            <Stack.Screen 
+                name="Signup" 
+                component={Signup} 
+                options ={{ presentation: 'modal', headerStyle:{backgroundColor: themes.colors.brand.roxoEscuro} }} />
+            <Stack.Screen 
                 name="Home" 
                 component={Home} 
-                options={{title: 'SCANdinavia - QR Code Scanner', headerStyle:{backgroundColor: themes.colors.brand.roxoEscuro}}} />
+                options={{ title: 'SCANdinavia', headerStyle:{backgroundColor: themes.colors.brand.roxoEscuro}}} />
             <Stack.Screen 
                 name="Scanner" 
                 component={Scanner} 
@@ -24,16 +34,16 @@ function AppStack() {
             <Stack.Screen 
                 name="addPatrimonio" 
                 component={addPatrimonio} 
-                options ={{ presentation: 'modal', headerStyle:{backgroundColor: themes.colors.brand.roxoEscuro} }}
+                options ={{ presentation: 'modal', title: '', headerStyle:{backgroundColor: themes.colors.brand.roxoEscuro} }}
                 initialParams={{ data: "" }} />
             <Stack.Screen 
-                name="Login" 
-                component={Login} 
-                options ={{ presentation: 'modal', headerStyle:{backgroundColor: themes.colors.brand.roxoEscuro} }} />
+                name="editPatrimonio" 
+                component={editPatrimonio} 
+                options ={{ presentation: 'modal', title: '', headerStyle:{backgroundColor: themes.colors.brand.roxoEscuro} }} />
             <Stack.Screen 
                 name="Lista" 
                 component={Lista} 
-                options ={{ presentation: 'modal', headerStyle:{backgroundColor: themes.colors.brand.roxoEscuro} }} />
+                options ={{ presentation: 'modal', title: '', headerStyle:{backgroundColor: themes.colors.brand.roxoEscuro} }} />
         </Stack.Navigator>
     )
 }

@@ -1,33 +1,24 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react'
-import { useSafeAreaInsets }
-    from 'react-native-safe-area-context'
+import React, { useState, useLayoutEffect } from 'react'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { View, Text, TouchableOpacity, StyleSheet, 
-         Image, TextInput, Alert } from 'react-native'
+         Image, TextInput, Alert, ActivityIndicator } from 'react-native'
 import themes from '../themes'
 import { auth } from '../../config/firebase'
-import { signInWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword } from 'firebase/auth'
 
-export default function Login({navigation, route}) {
+export default function Signup({navigation}) {
     useLayoutEffect(()=> {
         navigation.setOptions({
             headerLeft: () => <></>,
         })
     }, [navigation])
 
-    const insets = useSafeAreaInsets();
+    const insets = useSafeAreaInsets()
 
-    const [email, setEmail] = useState('');
-    const [senha, setSenha] = useState('');
+    const [email, setEmail] = useState('')
+    const [senha, setSenha] = useState('')
 
-    useEffect(() => {
-        if (route.params?.email) {
-            setEmail(route.params.email);
-            setSenha('123456');
-        }
-    }, [route.params?.email]);
-    
-    
-    const handleLogin = async() => {
+    const handleSignup = async() => {
         //Efetuando as validações básicas do form
         if(email === '' || senha ===''){
             Alert.alert('Atenção⚠',
@@ -40,13 +31,15 @@ export default function Login({navigation, route}) {
             return  
         }
 
-        signInWithEmailAndPassword(auth, email, senha)
+        //Iremos cadastrar no Firebase
+        createUserWithEmailAndPassword(auth, email, senha)
         .then(() => {
-            navigation.navigate("Home");
+            Alert.alert('Aviso',
+            'Usuário criado com sucesso! Efetue o login')
+            navigation.navigate('Login', { email })
         })
         .catch((error) => {
-            Alert.alert('Erro',
-            `Erro ao efetuar o login: ${error.message}`)
+            Alert.alert('Erro', `Erro ao criar o novo usuário: ${error.message}`)
         })
     }
 
@@ -57,7 +50,7 @@ export default function Login({navigation, route}) {
             flex: 1
         }}>
             <View style={styles.container}>
-                <Text style={styles.titulo}>Login</Text>
+                <Text style={styles.titulo}>Signup</Text>
                 <Image source={require('../../assets/icon.png')}
                     style={styles.logo} />
 
@@ -79,16 +72,17 @@ export default function Login({navigation, route}) {
                         secureTextEntry />
 
                     <TouchableOpacity style={styles.loginButton}
-                        onPress={handleLogin}>
+                        onPress={handleSignup}>
                         <Text style={styles.loginButtonText}>
-                            Login
+                            Cadastrar
                         </Text>
                     </TouchableOpacity>
 
+
                     <TouchableOpacity
-                        onPress={() => navigation.navigate('Signup')}>
+                        onPress={() => navigation.navigate('Login')}>
                         <Text>
-                            Ainda não é usuário? Registre-se
+                            Já é um usuário? Efetue o login
                         </Text>
                     </TouchableOpacity>
                 </View>

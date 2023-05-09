@@ -30,17 +30,17 @@ export default function Patrimonio({...patrimonio}){
             Alert.alert("sifude", "suporta web n")
         }
         else {
-            navigation.navigate("Cadastro", patrimonio.id)
+            navigation.navigate("editPatrimonio", patrimonio)
         }
     }
 
     return (
-        <View style={styles.patrimonioContainer}>
+        <View style={styles.patrimonioContainer}>   
             <View style={{flexDirection: "row", justifyContent: "space-between"}}>
                 <Text style={styles.nome}>{patrimonio.nome}</Text>
-                <View style={{flexDirection: "row-reverse"}} >
+                <View style={{flexDirection: "row"}} >
+                    <MaterialCommunityIcons name="circle-edit-outline" onPress={onEdit} size={32} color={themes.colors.utility.success} />
                     <MaterialCommunityIcons name="trash-can" onPress={onDelete} size={32} color={themes.colors.utility.danger} />
-                    <MaterialCommunityIcons name="circle-edit-outline" size={32} color={themes.colors.utility.success} />
                 </View>
             </View>
             <View style={{flexDirection: "row", justifyContent: "flex-start"}}>

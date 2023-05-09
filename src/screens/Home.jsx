@@ -1,9 +1,11 @@
-import React from 'react'
-import { StyleSheet, View, Text, Image, Alert, Button } from 'react-native'
+import React, { useLayoutEffect } from 'react'
+import { StyleSheet, View, Text, Image, Alert, Button, TouchableOpacity } from 'react-native'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import BotaoFlutuante from '../components/BotaoFlutuante'
 import themes from '../themes'
 import { MotiView } from 'moti';
 import { auth } from '../../config/firebase'
+import { signOut } from 'firebase/auth'
 
 function Animate(props) {
 	return (
@@ -26,6 +28,17 @@ function Animate(props) {
 }
 
 export default function Home({navigation}){
+	useLayoutEffect(()=> {
+        navigation.setOptions({
+            headerLeft: () => <></>, //remove o voltar
+            headerRight: () => <MaterialCommunityIcons.Button
+                    name="logout"
+                    backgroundColor={themes.colors.brand.roxoEscuro}
+                    onPress={() => {signOut(auth).then(() => {navigation.navigate('Login')})}}>
+                </MaterialCommunityIcons.Button>
+        })
+    }, [navigation])
+
 	function checkLogin(){
 		if(auth.currentUser != null) {
 			navigation.navigate("Scanner");
@@ -37,21 +50,32 @@ export default function Home({navigation}){
 
 	return (
 		<View style={styles.container}>
-			<View style={styles.logo_fundo}>   
-				<Text style={styles.texto}>SCAN<Text style={styles.subtexto}>dinavia</Text></Text>
-			</View>
+			<View>
+				<View style={styles.logo_fundo}>   
+					<Text style={styles.texto}>SCAN<Text style={styles.subtexto}>dinavia</Text></Text>
+				</View>
 				<Image source={require('../../assets/viking128px.png')}
-					style={styles.button}/>
-			<MotiView>
-				<Animate>
-					<BotaoFlutuante onPress={checkLogin}
-						icon="qrcode-scan" size={150} style={styles.button}/> 
-						</Animate>
-					</MotiView>
-			{/* <BotaoFlutuante onPress={checkLogin}
-				icon="qrcode-scan" size={150} style={styles.button}/>  */}
-			<Button title='Login' onPress={() => navigation.navigate('Login')}></Button>
-			<Button title='Lista de Patrimonios' onPress={() => navigation.navigate('Lista')}></Button>
+					style={styles.scanButton}/>
+			</View>
+			<View style={{marginBottom: 20}}>
+				<MotiView>
+					<Animate>
+						<BotaoFlutuante onPress={checkLogin}
+							icon="qrcode-scan" size={150} style={styles.scanButton}/> 
+					</Animate>
+				</MotiView>
+				{/* <BotaoFlutuante onPress={checkLogin}
+					icon="qrcode-scan" size={150} style={styles.button}/>  */}
+				
+				<TouchableOpacity
+					onPress={() => navigation.navigate('Lista')}
+					style={styles.button}
+				><Text style={styles.buttonText}>Lista de Patrimônios</Text></TouchableOpacity>
+				<TouchableOpacity
+					onPress={() => navigation.navigate('addPatrimonio')}
+					style={styles.button}
+				><Text style={styles.buttonText}>Cadastrar patrimônio</Text></TouchableOpacity>
+			</View>
 		</View>
 	)
 }
@@ -61,7 +85,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: themes.colors.brand.roxoClaro,
 		alignItems: 'center',
-		justifyContent: 'center',
+		justifyContent: 'space-between'
 	},
 	logo_fundo: {
 		backgroundColor: themes.colors.brand.roxoEscuro,
@@ -85,12 +109,25 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignSelf: 'center'
 	},
-	button: {
-		margin: 20,
+	scanButton: {
+		marginBottom: 20,
 		justifyContent: 'center',
 		alignItems: 'center',
 		alignSelf: 'center',
 	},
+	button: {
+		backgroundColor: themes.colors.utility.info,
+		marginVertical: 10,
+		borderRadius: 10,
+		borderWidth: 2,
+		padding: 10,
+		alignSelf: "center",
+	},
+	buttonText: {
+        color: themes.colors.neutral.foreground,
+        fontWeight: 'bold',
+        textAlign: 'center'
+    },
 	shape: {
 		justifyContent: 'center',
 		borderRadius: 25,

@@ -26,8 +26,8 @@ export default function Scanner({navigation}) {
 
 	const addPatrimonio = () => {
 		const patrimonioRef = collection(database, "patrimonio");
-		const q = query(patrimonioRef, where("codigo", "==", data));
-		// setScanned(false);
+		const q = query(patrimonioRef, where("codigo", "==", data), where("usuarioInclusao", "==", auth.currentUser.uid));
+		setScanned(false);
 		onSnapshot(q, querySnapshot => {
 			if (!querySnapshot.empty) {
 				const doc = querySnapshot.docs[0];
@@ -38,7 +38,7 @@ export default function Scanner({navigation}) {
 					local: doc.data().local,
 					createdAt: doc.data().createdAt
 				}
-				// navigation.navigate("editPatrimonio", patrimonio);
+				navigation.navigate("editPatrimonio", patrimonio);
 			}
 			else {
 				navigation.navigate("addPatrimonio", { data });
@@ -72,9 +72,7 @@ export default function Scanner({navigation}) {
 			<BarCodeScanner onBarCodeScanned={scanned ? undefined : handleBarCodeScanned} style={{
 				width: Dimensions.get('screen').width * 1.5,
 				height: Dimensions.get('screen').height * 1.5,
-			}}>
-				<Button title='vsd porra' onPress={() => {setScanned(true); setData(123456)}}></Button>
-			</BarCodeScanner>
+			}} />
 		)}
 		</View>
 	);

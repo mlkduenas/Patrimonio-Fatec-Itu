@@ -3,24 +3,16 @@ import { StyleSheet, View, Text, TextInput, Alert, TouchableOpacity } from 'reac
 import themes from '../themes'
 
 import { database, auth } from '../../config/firebase'
-import { collection, addDoc } from 'firebase/firestore'
+import { updateDoc, doc } from 'firebase/firestore'
 
 import moment from 'moment'
 const hoje = moment()
 
 export default function Cadastro({navigation, route}){
-	const { data } = route.params;
-	const [lockCodigo, setLockCodigo] = useState(data != "")
+	const [patrimonio, setPatrimonio] = useState({...route.params, lastEditedAt: hoje.format()});
+	const [lockCodigo, setLockCodigo] = useState(patrimonio.codigo != "")
 
-	const [patrimonio, setPatrimonio] = useState({
-		codigo: data,
-		nome: '',
-		local: '',
-        createdAt: hoje.format(),
-        usuarioInclusao: auth.currentUser.uid
-	})
-
-	const handleCadastro = async() => {
+	const handleEditar = async() => {
 		if (patrimonio.codigo == ""){
 			Alert.alert('Atenção⚠',
 			'Informe um código para o patrimônio!');
@@ -37,21 +29,21 @@ export default function Cadastro({navigation, route}){
 			return;
 		}
 
-		await addDoc(collection(database, 'patrimonio'), patrimonio)
+		await updateDoc(doc(database, 'patrimonio', patrimonio.id), patrimonio)
 		.then(() => {
 			Alert.alert("Sucesso", "Patrimônio editado com sucesso");
 			navigation.navigate("Home");
 		})
 		.catch((error) => {
             Alert.alert('Erro',
-            `Erro ao adicionar o patrimônio: ${error.message}`)
+            `Erro ao atualizar o patrimônio: ${error.message}`);
         })
 		return;
 	}
 
 	return (
 		<View style={styles.container}>
-			<Text style={styles.titulo}>Cadastrar Patrimônio</Text>
+			<Text style={styles.titulo}>Editar Patrimônio</Text>
 			<TextInput
 				style = {styles.input}
 				onChangeText = {(text) => setPatrimonio(
@@ -76,9 +68,9 @@ export default function Cadastro({navigation, route}){
 				placeholder = "Local"
 			/>
 			<TouchableOpacity
-				onPress={handleCadastro}
+				onPress={handleEditar}
 				style={styles.button}
-			><Text style={styles.buttonText}>Cadastrar</Text></TouchableOpacity>
+			><Text style={styles.buttonText}>Editar</Text></TouchableOpacity>
 		</View>
 	)
 }
