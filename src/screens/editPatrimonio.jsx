@@ -1,11 +1,32 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, Text, TextInput, Alert, TouchableOpacity } from 'react-native'
+import { StyleSheet, Image, View, Text, TextInput, Alert, TouchableOpacity } from 'react-native'
 import themes from '../themes'
-
+import { MotiView } from 'moti';
 import { database, auth } from '../../config/firebase'
 import { updateDoc, doc } from 'firebase/firestore'
 
 import moment from 'moment'
+
+function Animate(props) {
+	return (
+		<MotiView
+			from={{
+				rotate: "10deg",
+			}}
+			animate={{
+				rotate: "-10deg",
+			}}
+			transition={{
+				loop: true,
+				type: 'timing',
+				duration: 1500,
+				delay: 100,
+			}}
+			style={styles.shape}
+		>{props.children}</MotiView>
+	);
+}
+
 const hoje = moment()
 
 export default function Cadastro({navigation, route}){
@@ -43,6 +64,14 @@ export default function Cadastro({navigation, route}){
 
 	return (
 		<View style={styles.container}>
+			<View style={{marginBottom: 20}}>
+				<MotiView>
+					<Animate>
+					<Image source={require('../../assets/tool.png')}
+					style={styles.icon}/>
+					</Animate>
+				</MotiView>
+			</View>
 			<Text style={styles.titulo}>Editar Patrimônio</Text>
 			<TextInput
 				style = {styles.input}
@@ -79,7 +108,8 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		justifyContent: 'center',
-		margin: 20,
+		backgroundColor: themes.colors.brand.roxoClaro,
+		padding: 10
 	},
 	titulo: {
 		margin: 20,
@@ -92,18 +122,23 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		borderWidth: 1,
 		padding: 10,
+		backgroundColor: themes.colors.neutral.foreground
 	},
 	button: {
 		backgroundColor: themes.colors.utility.info,
 		marginVertical: 10,
 		borderRadius: 10,
 		borderWidth: 2,
-		padding: 10,
+		padding: 20,
 		alignSelf: "center",
+		width: "100%"
 	},
 	buttonText: {
         color: themes.colors.neutral.foreground,
         fontWeight: 'bold',
         textAlign: 'center'
     },
+	icon: {
+		alignSelf: 'center'
+	}
 });

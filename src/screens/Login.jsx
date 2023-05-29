@@ -100,15 +100,15 @@ export default function Login({navigation, route}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // backgroundColor: themes.colors.brand.roxoClaro,
+        backgroundColor: themes.colors.brand.roxoClaro,
         alignItems: 'center',
         justifyContent: 'center',
-        margin: 16,
-        borderRadius: 16
+        //margin: 16,
+        //borderRadius: 16
     },
     titulo: {
         fontSize: 24,
-        color: themes.colors.brand.roxoEscuro,
+        //color: themes.colors.brand.roxoEscuro,
         marginVertical: 8
     },
     logo: {
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 16,
         marginBottom: 8,
-        color: themes.colors.brand.roxoEscuro
+        //color: themes.colors.brand.roxoEscuro
     },
     loginButton: {
         backgroundColor: themes.colors.utility.info,

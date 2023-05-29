@@ -55,7 +55,7 @@ export default function Patrimonio({...patrimonio}){
 const styles = StyleSheet.create({
     patrimonioContainer: {
         padding: 8,
-        backgroundColor: themes.colors.neutral.foreground,
+        backgroundColor: themes.colors.brand.roxoEscuro,
         margin: 16,
         borderRadius: 8
     },
