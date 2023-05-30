@@ -27,7 +27,6 @@ export default function Scanner({navigation}) {
 	const addPatrimonio = () => {
 		const patrimonioRef = collection(database, "patrimonio");
 		const q = query(patrimonioRef, where("codigo", "==", data), where("usuarioInclusao", "==", auth.currentUser.uid));
-		setScanned(false);
 		onSnapshot(q, querySnapshot => {
 			if (!querySnapshot.empty) {
 				const doc = querySnapshot.docs[0];
@@ -43,6 +42,7 @@ export default function Scanner({navigation}) {
 			else {
 				navigation.navigate("addPatrimonio", { data });
 			}
+		setScanned(false);
 		})
 	}
 
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
 	fundourl: {
 		backgroundColor: themes.colors.brand.roxoEscuro,
 		borderRadius: 10,
-		borderWidth: 1
+		borderWidth: 2
 	},
 	data: {
 		fontSize: 20,
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
 		marginTop: 15,
 		padding: 15,
 		borderRadius: 8,
-		borderWidth: 1
+		borderWidth: 2
 	},
 	fileBtn: {
 		alignSelf: "center",

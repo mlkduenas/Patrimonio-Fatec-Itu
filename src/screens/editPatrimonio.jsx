@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Image, View, Text, TextInput, Alert, TouchableOpacity } from 'react-native'
+import { StyleSheet, Image, View, Text, TextInput, Alert, TouchableOpacity, ScrollView } from 'react-native'
 import themes from '../themes'
 import { MotiView } from 'moti';
 import { database, auth } from '../../config/firebase'
 import { updateDoc, doc } from 'firebase/firestore'
+import { Picker } from '@react-native-picker/picker';
 
 import moment from 'moment'
 
@@ -49,6 +50,11 @@ export default function Cadastro({navigation, route}){
 			'Informe um local para o patrimônio!');
 			return;
 		}
+		if (patrimonio.estado == ""){
+			Alert.alert('Atenção⚠',
+			'Informe um estado para o patrimônio!');
+			return;
+		}
 
 		await updateDoc(doc(database, 'patrimonio', patrimonio.id), patrimonio)
 		.then(() => {
@@ -63,7 +69,7 @@ export default function Cadastro({navigation, route}){
 	}
 
 	return (
-		<View style={styles.container}>
+		<ScrollView contentContainerstyle={styles.container}>
 			<View style={{marginBottom: 20}}>
 				<MotiView>
 					<Animate>
@@ -96,11 +102,35 @@ export default function Cadastro({navigation, route}){
 				value = {patrimonio.local}
 				placeholder = "Local"
 			/>
+
+			<Picker
+				style = {styles.input}
+				selectedValue={patrimonio.estado}
+				onValueChange={(itemValue, itemIndex) => {
+					setPatrimonio({...patrimonio, estado: itemValue})
+				}}>
+				<Picker.Item label="Em uso" value="Em uso" />
+				<Picker.Item label="Em manutenção" value="Em manutenção" />
+				<Picker.Item label="Em baixa" value="Em baixa" />
+			</Picker>
+
+			<Picker
+				style = {styles.input}
+				selectedValue={patrimonio.categoria}
+				onValueChange={(itemValue, itemIndex) => {
+					setPatrimonio({...patrimonio, categoria: itemValue})
+				}}>
+				<Picker.Item label="Informática" value="Informática" />
+				<Picker.Item label="Mobiliário" value="Mobiliário" />
+				<Picker.Item label="Ferramenta" value="Ferramenta" />
+				<Picker.Item label="Eletrodoméstico" value="Eletrodoméstico" />
+			</Picker>
+
 			<TouchableOpacity
 				onPress={handleEditar}
 				style={styles.button}
 			><Text style={styles.buttonText}>Editar</Text></TouchableOpacity>
-		</View>
+		</ScrollView>
 	)
 }
 
@@ -120,7 +150,7 @@ const styles = StyleSheet.create({
 		fontSize: 20,
 		marginVertical: 10,
 		borderRadius: 10,
-		borderWidth: 1,
+		borderWidth: 2,
 		padding: 10,
 		backgroundColor: themes.colors.neutral.foreground
 	},

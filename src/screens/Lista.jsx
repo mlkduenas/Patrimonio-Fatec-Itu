@@ -26,6 +26,8 @@ export default function Home({navigation}){
                     codigo: doc.data().codigo,
                     nome: doc.data().nome,
                     local: doc.data().local,
+                    estado: doc.data().estado,
+                    categoria: doc.data().categoria,
                     createdAt: doc.data().createdAt
                 }))
             )
@@ -58,6 +60,8 @@ export default function Home({navigation}){
                         patrimonio.nome.toLocaleLowerCase()
                         .includes(busca.toLocaleLowerCase()) ||
                         patrimonio.local.toLocaleLowerCase()
+                        .includes(busca.toLocaleLowerCase()) ||
+                        patrimonio.estado.toLocaleLowerCase()
                         .includes(busca.toLocaleLowerCase()) ||
                         patrimonio.codigo.toLocaleLowerCase()
                         .includes(busca.toLocaleLowerCase())

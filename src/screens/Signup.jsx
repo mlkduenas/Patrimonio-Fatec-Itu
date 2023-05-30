@@ -1,5 +1,4 @@
 import React, { useState, useLayoutEffect } from 'react'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { View, Text, TouchableOpacity, StyleSheet, 
          Image, TextInput, Alert, ActivityIndicator } from 'react-native'
 import themes from '../themes'
@@ -12,8 +11,6 @@ export default function Signup({navigation}) {
             headerLeft: () => <></>,
         })
     }, [navigation])
-
-    const insets = useSafeAreaInsets()
 
     const [email, setEmail] = useState('')
     const [senha, setSenha] = useState('')
@@ -45,7 +42,6 @@ export default function Signup({navigation}) {
 
     return (
         <View style={{
-            paddingTop: insets.top,
             // backgroundColor: themes.colors.brand.roxoEscuro,
             flex: 1
         }}>
@@ -94,15 +90,15 @@ export default function Signup({navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // backgroundColor: themes.colors.brand.roxoClaro,
+        backgroundColor: themes.colors.brand.roxoClaro,
         alignItems: 'center',
         justifyContent: 'center',
-        margin: 16,
-        borderRadius: 16
+        //margin: 16,
+        //borderRadius: 16
     },
     titulo: {
         fontSize: 24,
-        color: themes.colors.brand.roxoEscuro,
+        //color: themes.colors.brand.roxoEscuro,
         marginVertical: 8
     },
     logo: {
@@ -124,7 +120,7 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 16,
         marginBottom: 8,
-        color: themes.colors.brand.roxoEscuro
+        //color: themes.colors.brand.roxoEscuro
     },
     loginButton: {
         backgroundColor: themes.colors.utility.info,

@@ -1,49 +1,62 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Image, View, Text, TextInput, Alert, TouchableOpacity } from 'react-native'
+import { StyleSheet, Image, View, Text, TextInput, Alert, TouchableOpacity, ScrollView } from 'react-native'
 import themes from '../themes'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { MotiView } from 'moti';
 import BotaoFlutuante from '../components/BotaoFlutuante'
 import { database, auth } from '../../config/firebase'
 import { collection, addDoc } from 'firebase/firestore'
+import { Picker } from '@react-native-picker/picker';
+
 
 import moment from 'moment'
 
 function Animate(props) {
 	return (
 		<MotiView
-			from={{
-				rotate: "10deg",
-			}}
-			animate={{
-				rotate: "-10deg",
-			}}
-			transition={{
-				loop: true,
-				type: 'timing',
-				duration: 1500,
-				delay: 100,
-			}}
-			style={styles.shape}
+		from={{
+			rotate: "10deg",
+		}}
+		animate={{
+			rotate: "-10deg",
+		}}
+		transition={{
+			loop: true,
+			type: 'timing',
+			duration: 1500,
+			delay: 100,
+		}}
+		style={styles.shape}
 		>{props.children}</MotiView>
-	);
-}
-
-const hoje = moment()
-
-export default function Cadastro({navigation, route}){
+		);
+	}
+	
+	const hoje = moment()
+	
+	export default function Cadastro({navigation, route}){
 	const { data } = route.params;
 	const [lockCodigo, setLockCodigo] = useState(data != "")
+	const [expanded, setExpanded] = React.useState(true);
+	const [checked, setChecked] = React.useState(false);
+
+  	const handlePress = () => setExpanded(!expanded);
 
 	const [patrimonio, setPatrimonio] = useState({
 		codigo: data,
 		nome: '',
 		local: '',
+		estado: 'Em uso',
+		categoria: 'Informática',
         createdAt: hoje.format(),
         usuarioInclusao: auth.currentUser.uid
 	})
 
 	const handleCadastro = async() => {
+		if (isNaN(patrimonio.codigo)){
+			Alert.alert('Atenção⚠',
+			'O código deve ser composto de números apenas!');
+			return;
+		}
 		if (patrimonio.codigo == ""){
 			Alert.alert('Atenção⚠',
 			'Informe um código para o patrimônio!');
@@ -59,10 +72,15 @@ export default function Cadastro({navigation, route}){
 			'Informe um local para o patrimônio!');
 			return;
 		}
+		if (patrimonio.estado == ""){
+			Alert.alert('Atenção⚠',
+			'Informe um estado para o patrimônio!');
+			return;
+		}
 
 		await addDoc(collection(database, 'patrimonio'), patrimonio)
 		.then(() => {
-			Alert.alert("Sucesso", "Patrimônio editado com sucesso");
+			Alert.alert("Sucesso", "Patrimônio cadastrado com sucesso");
 			navigation.navigate("Home");
 		})
 		.catch((error) => {
@@ -73,7 +91,7 @@ export default function Cadastro({navigation, route}){
 	}
 
 	return (
-		<View style={styles.container}>
+		<ScrollView contentContainerstyle={styles.container}>
 			<View style={{marginBottom: 20}}>
 				<MotiView>
 					<Animate>
@@ -106,11 +124,35 @@ export default function Cadastro({navigation, route}){
 				value = {patrimonio.local}
 				placeholder = "Local"
 			/>
+
+			<Picker
+				style = {styles.input}
+				selectedValue={patrimonio.estado}
+				onValueChange={(itemValue, itemIndex) => {
+					setPatrimonio({...patrimonio, estado: itemValue})
+				}}>
+				<Picker.Item label="Em uso" value="Em uso" />
+				<Picker.Item label="Em manutenção" value="Em manutenção" />
+				<Picker.Item label="Em baixa" value="Em baixa" />
+			</Picker>
+
+			<Picker
+				style = {styles.input}
+				selectedValue={patrimonio.categoria}
+				onValueChange={(itemValue, itemIndex) => {
+					setPatrimonio({...patrimonio, categoria: itemValue})
+				}}>
+				<Picker.Item label="Informática" value="Informática" />
+				<Picker.Item label="Mobiliário" value="Mobiliário" />
+				<Picker.Item label="Ferramenta" value="Ferramenta" />
+				<Picker.Item label="Eletrodoméstico" value="Eletrodoméstico" />
+			</Picker>
+
 			<TouchableOpacity
 				onPress={handleCadastro}
 				style={styles.button}
 			><Text style={styles.buttonText}>Cadastrar</Text></TouchableOpacity>
-		</View>
+		</ScrollView>
 	)
 }
 
@@ -130,9 +172,9 @@ const styles = StyleSheet.create({
 		fontSize: 20,
 		marginVertical: 10,
 		borderRadius: 10,
-		borderWidth: 1,
+		borderWidth: 2,
 		padding: 10,
-		backgroundColor: themes.colors.neutral.foreground
+		backgroundColor: themes.colors.neutral.foreground,
 	},
 	button: {
 		backgroundColor: themes.colors.utility.info,
@@ -149,6 +191,6 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
 	icon: {
-		alignSelf: 'center'
+		alignSelf: 'center',
 	}
 });

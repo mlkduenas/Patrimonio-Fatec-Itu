@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react'
-import { useSafeAreaInsets }
-    from 'react-native-safe-area-context'
 import { View, Text, TouchableOpacity, StyleSheet, 
          Image, TextInput, Alert } from 'react-native'
 import themes from '../themes'
@@ -13,8 +11,6 @@ export default function Login({navigation, route}) {
             headerLeft: () => <></>,
         })
     }, [navigation])
-
-    const insets = useSafeAreaInsets();
 
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
@@ -52,7 +48,6 @@ export default function Login({navigation, route}) {
 
     return (
         <View style={{
-            paddingTop: insets.top,
             // backgroundColor: themes.colors.brand.roxoEscuro,
             flex: 1
         }}>
